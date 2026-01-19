@@ -1,0 +1,20 @@
+
+> workflow@0.0.1 build
+> nest build
+
+[96mprisma.config.ts[0m:[93m4[0m:[93m30[0m - [91merror[0m[90m TS2307: [0mCannot find module 'prisma/config' or its corresponding type declarations.
+
+[7m4[0m import { defineConfig } from "prisma/config";
+[7m [0m [91m                             ~~~~~~~~~~~~~~~[0m
+[96msrc/workflow-engine/engine/engine.service.ts[0m:[93m2[0m:[93m28[0m - [91merror[0m[90m TS2459: [0mModule '"../domain/entities/workflow-template.entity"' declares 'WorkflowStep' locally, but it is not exported.
+
+[7m2[0m import { WorkflowTemplate, WorkflowStep } from '../domain/entities/workflow-template.entity';
+[7m [0m [91m                           ~~~~~~~~~~~~[0m
+
+  [96msrc/workflow-engine/domain/entities/workflow-template.entity.ts[0m:[93m2[0m:[93m10[0m
+    [7m2[0m import { WorkflowStep } from './workflow-step.entity';
+    [7m [0m [96m         ~~~~~~~~~~~~[0m
+    'WorkflowStep' is declared here.
+
+Found 2 error(s).
+
