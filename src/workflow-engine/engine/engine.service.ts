@@ -53,10 +53,14 @@ export class EngineService {
     }
 
     private validatePermissions(step: WorkflowStep, action: WorkflowAction, roles: string[]) {
-        // Simple check: does the step allow these roles?
-        // In real world: check action-specific permissions
-        const allowed = step.config.allowedRoles.some(r => roles.includes(r));
-        if (!allowed && step.config.allowedRoles.length > 0) {
+        // Safe access to allowedRoles, defaulting to empty array if undefined
+        const allowedRoles = step.config?.allowedRoles || [];
+
+        // If no roles defined, we assume open access (or handle as per requirement)
+        if (allowedRoles.length === 0) return;
+
+        const allowed = allowedRoles.some(r => roles.includes(r));
+        if (!allowed) {
             throw new ForbiddenException(`User does not have permission to perform action on step ${step.key}`);
         }
     }

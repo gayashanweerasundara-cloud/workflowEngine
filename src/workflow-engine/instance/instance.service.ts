@@ -64,4 +64,19 @@ export class InstanceService {
 
         return saved;
     }
+
+    async findAll(): Promise<WorkflowInstance[]> {
+        return this.instanceRepo.find({
+            order: { createdAt: 'DESC' }
+        });
+    }
+
+    async findOne(id: string): Promise<WorkflowInstance> {
+        const instance = await this.instanceRepo.findOne({
+            where: { id },
+            relations: ['template', 'template.steps'] // Needed for transitions
+        });
+        if (!instance) throw new NotFoundException('Instance not found');
+        return instance;
+    }
 }

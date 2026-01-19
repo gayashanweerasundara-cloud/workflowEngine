@@ -6,6 +6,7 @@ import { InstanceModule } from './workflow-engine/instance/instance.module';
 import { WorkflowTemplate } from './workflow-engine/domain/entities/workflow-template.entity';
 import { WorkflowStep } from './workflow-engine/domain/entities/workflow-step.entity';
 import { WorkflowInstance } from './workflow-engine/domain/entities/workflow-instance.entity';
+import { AuditLog } from './workflow-engine/domain/entities/audit-log.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { WorkflowInstance } from './workflow-engine/domain/entities/workflow-ins
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [WorkflowTemplate, WorkflowStep, WorkflowInstance],
+      entities: [WorkflowTemplate, WorkflowStep, WorkflowInstance, AuditLog],
       synchronize: true, // Auto-schema sync for dev
     }),
     TemplateModule,

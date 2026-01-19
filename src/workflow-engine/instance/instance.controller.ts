@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get } from '@nestjs/common';
 import { InstanceService } from './instance.service';
 import { WorkflowAction } from '../domain/enums/workflow-status.enum';
 
@@ -17,5 +17,15 @@ export class InstanceController {
         @Body() body: { action: WorkflowAction; roles: string[]; payload?: any }
     ) {
         return this.instanceService.transition(id, body.action, body.roles, body.payload);
+    }
+
+    @Get()
+    findAll() {
+        return this.instanceService.findAll();
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.instanceService.findOne(id);
     }
 }
