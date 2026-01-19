@@ -21,6 +21,63 @@ The system is designed using Domain-Driven Design (DDD) principles:
 - **Engine Layer**: Contains the business logic for state transitions and permission checks.
 - **API Layer**: Exposes REST endpoints for external systems to interact with the engine.
 
+## System Schema
+
+The following Entity Relationship Diagram (ERD) illustrates the core data models and their relationships:
+
+```mermaid
+erDiagram
+    WorkflowTemplate ||--|{ WorkflowStep : "has steps"
+    WorkflowTemplate ||--o{ WorkflowInstance : "instantiated by"
+    WorkflowInstance ||--o{ AuditLog : "logs history"
+
+    WorkflowTemplate {
+        uuid id PK
+        string name
+        string description
+        int version
+        boolean isPublished
+    }
+
+    WorkflowStep {
+        uuid id PK
+        string key "Status identifier (e.g., 'IN_REVIEW')"
+        string label "Display name"
+        int order
+        jsonb config "Rules, allowedRoles, autoTransition"
+        uuid templateId FK
+    }
+
+    WorkflowInstance {
+        uuid id PK
+        uuid templateId FK
+        string currentStepKey
+        string status "ACTIVE, COMPLETED, FAILED"
+        string businessEntityId "Ref to external entity (e.g., Job ID)"
+        jsonb contextData
+        timestamp createdAt
+        timestamp updatedAt
+    }
+
+    AuditLog {
+        uuid id PK
+        uuid instanceId FK
+        string action "APPROVE, REJECT"
+        string actorId "User ID"
+        string fromStep
+        string toStep
+        jsonb payload
+        timestamp timestamp
+    }
+```
+
+### Key Entities
+
+- **WorkflowTemplate**: Defines a blueprint for a process (e.g., "Job Approval Flow"). It contains versioning and publication status.
+- **WorkflowStep**: Represents a specific state within a template (e.g., "Draft", "Manager Review"). It stores configuration for allowed roles and transition rules.
+- **WorkflowInstance**: A running instance of a workflow, linked to a specific business entity (like a job posting or document). It tracks the current step and accumulated context data.
+- **AuditLog**: An append-only log recording every action taken on an instance, providing a complete history of who did what and when.
+
 ### Tech Stack
 - **Framework**: NestJS
 - **Database**: PostgreSQL
